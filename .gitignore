@@ -1,6 +1,8 @@
-  Visa Grade  Final Grade Student Name Average (from file)  Calculated Weighted Average Letter Grade Student Status
-0         NaN          NaN     gARAN Tİ                <NA>                          NaN            F           Stay
-1         NaN          NaN    Can demir                66.0                          NaN            F
+| Student Name | Visa Grade | Final Grade | Avg Grade | Letter Grade | Status |
+| ------------ | ---------- | ----------- | --------- | ------------ | ------ |
+| GARAN Tİ     | NaN        | NaN         | NaN       | F            | Stay   |
+| Can Demir    | 66.0       | 79        | NaN       | F            | pass   |
+
 # Reload the dataset with the correct header (row 3, which is index 3)
 df = pd.read_csv('art Vıse staying passıng.xlsx - Sayfa1.csv', header=3)
 
