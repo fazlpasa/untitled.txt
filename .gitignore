@@ -1,0 +1,77 @@
+  Visa Grade  Final Grade Student Name Average (from file)  Calculated Weighted Average Letter Grade Student Status
+0         NaN          NaN     gARAN Tİ                <NA>                          NaN            F           Stay
+1         NaN          NaN    Can demir                66.0                          NaN            F
+# Reload the dataset with the correct header (row 3, which is index 3)
+df = pd.read_csv('art Vıse staying passıng.xlsx - Sayfa1.csv', header=3)
+
+# Rename columns for clarity
+df.rename(columns={
+    'Örnek Sınav': 'Student Info',
+    'Vize Notu: 0': 'Visa Grade',
+    'FINAL notu': 'Final Grade'
+}, inplace=True)
+
+# Drop rows where 'Student Info' is NaN, as these are not relevant student entries
+df.dropna(subset=['Student Info'], inplace=True)
+
+# Drop the last row as it contains total values (now that NaN rows are dropped)
+df = df.iloc[:-1]
+
+# Extract student name and average from 'Student Info'
+df['Student Name'] = df['Student Info'].apply(lambda x: x.split(' Ort.')[0] if ' Ort.' in str(x) else x)
+df['Average (from file)'] = df['Student Info'].apply(lambda x: float(x.split(' Ort.')[1]) if ' Ort.' in str(x) else pd.NA)
+
+# Drop original 'Student Info' column
+df.drop(columns=['Student Info', 'Unnamed: 0', 'Unnamed: 1', 'Unnamed: 2'], inplace=True)
+
+
+# Convert relevant columns to numeric, coercing errors
+df['Visa Grade'] = pd.to_numeric(df['Visa Grade'], errors='coerce')
+df['Final Grade'] = pd.to_numeric(df['Final Grade'], errors='coerce')
+
+# Define the functions as provided by the user
+def calculate_weighted_average(visa_grade, visa_weight, final_grade, final_weight):
+    """Calculates the weighted average of two grades."""
+    return (visa_grade * (visa_weight / 100)) + (final_grade * (final_weight / 100))
+
+def get_letter_grade(weighted_average):
+    """Determines the letter grade based on the weighted average."""
+    if weighted_average >= 90:
+        return 'A'
+    elif weighted_average >= 80:
+        return 'B'
+    elif weighted_average >= 70:
+        return 'C'
+    elif weighted_average >= 60:
+        return 'D'
+    else:
+        return 'F'
+
+def get_pass_status(weighted_average):
+    """Determines if the student passed or needs to stay."""
+    if weighted_average >= 60:
+        return 'Passed'
+    else:
+        return 'Stay'
+
+# Set Visa and Final weights (as per the example code, assuming fixed weights if not specified otherwise in the data)
+# The example code provided fixed weights of 40% for Visa and 60% for Final (implied by 100-40=60)
+visa_weight = 40
+final_weight = 60
+
+# Calculate the weighted average for each student
+df['Calculated Weighted Average'] = df.apply(
+    lambda row: calculate_weighted_average(row['Visa Grade'], visa_weight, row['Final Grade'], final_weight),
+    axis=1
+)
+
+# Determine the letter grade for each student
+df['Letter Grade'] = df['Calculated Weighted Average'].apply(get_letter_grade)
+
+# Determine the pass status for each student
+df['Student Status'] = df['Calculated Weighted Average'].apply(get_pass_status)
+
+# Display the final DataFrame with calculated results
+print(df)
+
+#f.to_csv(
