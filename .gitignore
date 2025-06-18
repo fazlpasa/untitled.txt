@@ -31,7 +31,7 @@ df.drop(columns=['Student Info', 'Unnamed: 0', 'Unnamed: 1', 'Unnamed: 2'], inpl
 df['Visa Grade'] = pd.to_numeric(df['Visa Grade'], errors='coerce')
 df['Final Grade'] = pd.to_numeric(df['Final Grade'], errors='coerce')
 
-# Define the functions as provided by the user
+f
 def calculate_weighted_average(visa_grade, visa_weight, final_grade, final_weight):
     """Calculates the weighted average of two grades."""
     return (visa_grade * (visa_weight / 100)) + (final_grade * (final_weight / 100))
@@ -76,4 +76,4 @@ df['Student Status'] = df['Calculated Weighted Average'].apply(get_pass_status)
 # Display the final DataFrame with calculated results
 print(df)
 
-#f.to_csv(
+#f
